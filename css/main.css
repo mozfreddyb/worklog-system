@@ -1,0 +1,25 @@
+html {
+  font-family: Fira Sans, sans, sans-serif;
+
+}
+code {
+  font-family: "Fira Mono";
+  white-space: pre;
+}
+pre { background-color: #eee; }
+nav {
+ display: flex;
+ flex-direction: column; /* flex downwards */
+ justify-content: flex-start; /* collect links at the top */
+ flex-shrink: 1; /* dont grow, dont shrink */
+ flex-grow: 1; /* "dont grow, dont shrink */
+ border-left : 1px solid #D7DBDD;
+ height: 300px;
+ width: 150px;
+
+}
+article {
+    flex-basis: max-content;
+}
+#flexcontainer { display: flex; }
+hr { padding: 0px; background-color: black; }
