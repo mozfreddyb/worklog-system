@@ -19,7 +19,6 @@ nav {
 
 }
 article {
-    flex-basis: max-content;
 }
 #flexcontainer { display: flex; }
 hr { padding: 0px; background-color: black; }

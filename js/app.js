@@ -12,12 +12,12 @@ function listArticles() {
   nav = document.getElementById("nav");
   // revese order, newest first.
   for (var i=urls.length-1; i > -1; i--) {
-    u = urls[i];
+    let u = urls[i];
     let anchor = document.createElement("a");
     anchor.href = '#';
-    anchor.dataset.url = u;
     // cut off after last slash,
     let filename = u.split("/").slice(-1)[0];
+    anchor.dataset.url = filename;
     anchor.title = filename;  // i.e. "YYY-MM-DD-foo-bar.md"
     // trim the preceeding datestamp (see above) for the text:
     anchor.textContent = filename.slice(11);
@@ -29,13 +29,15 @@ function listArticles() {
 
 function requestArticle(ev) {
   var url = ev.target.dataset.url;
-  location.hash = new URL(url).pathname;
+  location.hash = url
+  // history.pushState({}, null, '#'+location.hash)
+  // ^- doesnt work in itself. needs window onpopstate to make the back button work.
   fetchArticle(url);
   ev.preventDefault();
   return false;
 }
 function fetchArticle(url) {
-  fetch(url).then(resp => {
+  fetch('articles/'+url).then(resp => {
     return resp.text().then(text => {
       let article = document.getElementById("mainarticle");
       article.innerHTML = marked(text);
@@ -50,12 +52,14 @@ function fetchArticle(url) {
 addEventListener('load', function() {
   // find articles through directory listing
   listArticles();
-  // check location hash for state, do not accept non-relative paths
-  if (location.hash.startsWith("#/articles/")) {
+  // the only acceptable hash is #alphanumerical-_.md
+  if (location.hash.search(/^#[A-Za-z0-9_\-\.]+\.md$/) === 0) {
     fetchArticle(location.hash.slice(1));
+  } else if (location.hash) {
+    console.error("I don't want to fetch a file that doesn't match the regex.")
   }
   // set up worker
-  worker = new Worker('worker.js');
+  worker = new Worker('js/worker.js');
   worker.onmessage = function(event) {
     let result = event.data;
     try {
