@@ -95,5 +95,3 @@ addEventListener('DOMContentLoaded', function() {
     history.replaceState(stateObj, null, location.href);
   };
 });
-
-//foo.innerHTML=markdown.toHTML(foo.innerHTML)
