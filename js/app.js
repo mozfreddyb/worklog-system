@@ -6,7 +6,8 @@ function highlightElement(el) {
   worker.postMessage({id: el.dataset.id, code: el.textContent});
 }
 function listArticles() {
-  let links = document.getElementById("indexframe").contentDocument.querySelectorAll("a")
+  let iframe = document.getElementById("indexframe");
+  let links = iframe.contentDocument.querySelectorAll("a");
   links = Array.filter(links, (el) => el.href.endsWith(".md"));
   let urls = Array.map(links, (el) => el.href);
   nav = document.getElementById("nav");
@@ -29,9 +30,6 @@ function listArticles() {
 
 function requestArticle(ev) {
   var url = ev.target.dataset.url;
-  location.hash = url
-  // history.pushState({}, null, '#'+location.hash)
-  // ^- doesnt work in itself. needs window onpopstate to make the back button work.
   fetchArticle(url);
   ev.preventDefault();
   return false;
@@ -40,18 +38,37 @@ function fetchArticle(url) {
   fetch('articles/'+url).then(resp => {
     return resp.text().then(text => {
       let article = document.getElementById("mainarticle");
-      article.innerHTML = marked(text);
+      let markup = marked(text);
+      article.innerHTML = markup;
+      let state = {
+         // overwrite this state later, once all elements are highlighted
+        highlighted: false,
+        articleText: markup
+      };
+      history.pushState(state, null, '#'+url);
       let codeEls = article.querySelectorAll("code");
       for (var el of codeEls) {
         highlightElement(el);
       }
     });
   });
-}
+};
 
-addEventListener('load', function() {
+addEventListener('popstate', function(event) {
+  let state = event.state;
+  let article = document.getElementById("mainarticle");
+  article.innerHTML = state.articleText;
+  if (state.highlighted !== true) {
+    let codeEls = article.querySelectorAll("code");
+    for (var el of codeEls) {
+      highlightElement(el);
+    }
+  }
+});
+
+addEventListener('DOMContentLoaded', function() {
   // find articles through directory listing
-  listArticles();
+   document.getElementById("indexframe").addEventListener("load", listArticles);
   // the only acceptable hash is #alphanumerical-_.md
   if (location.hash.search(/^#[A-Za-z0-9_\-\.]+\.md$/) === 0) {
     fetchArticle(location.hash.slice(1));
@@ -64,10 +81,18 @@ addEventListener('load', function() {
     let result = event.data;
     try {
       let el = document.querySelector("[data-id=\""+result.id+"\"]");
+      el.dataset.highlighted = "true";
       el.innerHTML = result.hl;
     } catch(e) {
       // race conditions whith someone navigating while still doing syntax hl
     }
+    if (document.querySelectorAll("code:not([data-highlighted])")) {
+      return;
+    }
+    // done with highlighting all elements, replace state
+    let stateObj = {highlighted: true,
+      articleText: document.getElementById("mainarticle").innerHTML };
+    history.replaceState(stateObj, null, location.href);
   };
 });
 
