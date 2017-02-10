@@ -6,7 +6,7 @@ function highlightElement(el) {
   worker.postMessage({id: el.dataset.id, code: el.textContent});
 }
 function listArticles() {
-  let links = f.contentDocument.querySelectorAll("a")
+  let links = document.getElementById("f").contentDocument.querySelectorAll("a")
   links = Array.filter(links, (el) => el.href.endsWith(".md"));
   let urls = Array.map(links, (el) => el.href);
   nav = document.getElementById("nav");
