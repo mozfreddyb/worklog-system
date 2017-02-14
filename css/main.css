@@ -1,6 +1,10 @@
 #indexframe { display: none; }
 html {
   font-family: Fira Sans, sans, sans-serif;
+
+}
+body {
+  padding: 2px;
 }
 code {
   font-family: "Fira Mono";
@@ -10,17 +14,20 @@ a { color: black; }
 a:visited { color: #333; }
 
 pre { background-color: #eee;  max-width: 100%; }
-hr { padding: 0px; background-color: black; }
+hr { background-color: #D7DBDD; height: 1px; border: 0; }
 nav {
  display: flex;
  flex-direction: column; /* flex downwards */
  justify-content: flex-start; /* collect links at the top */
  flex-shrink: 1; /* dont grow, dont shrink */
  flex-grow: 1; /* "dont grow, dont shrink */
- border-right : 1px solid #D7DBDD;
+ padding: 10px;
+ border-left: 1px solid #D7DBDD;
+
 }
 article {
   flex-grow: 11;
+  padding: 10px;
 }
 #main {
   display: flex;
@@ -30,6 +37,10 @@ article {
   #main {
     flex-direction: column;
   }
-  h1 { font-size: 5vw; }
-  h2,h3 { font-size: 4vw; }
+  h1 { font-size: 5vmin; }
+  h2,h3 { font-size: 4vmin; }
+  nav {
+    border: none;
+    border-top: 1px solid #D7DBDD;
+  }
 }
