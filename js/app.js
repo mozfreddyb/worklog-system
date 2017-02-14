@@ -29,7 +29,7 @@ function listArticles() {
 }
 
 function requestArticle(ev) {
-  var url = ev.target.dataset.url;
+  let url = ev.target.dataset.url;
   fetchArticle(url);
   ev.preventDefault();
   return false;
@@ -70,13 +70,18 @@ addEventListener('popstate', function(event) {
 
 addEventListener('DOMContentLoaded', function() {
   // find articles through directory listing
-   document.getElementById("indexframe").addEventListener("load", listArticles);
-  // the only acceptable hash is #alphanumerical-_.md
-  if (location.hash.search(/^#[A-Za-z0-9_\-\.]+\.md$/) === 0) {
-    fetchArticle(location.hash.slice(1));
-  } else if (location.hash) {
-    console.error("I don't want to fetch a file that doesn't match the regex.")
-  }
+   document.getElementById("indexframe").addEventListener("load", function() {
+     listArticles();
+     // the only acceptable hash is #alphanumerical-_.md
+     if (location.hash.search(/^#[A-Za-z0-9_\-\.]+\.md$/) === 0) {
+       fetchArticle(location.hash.slice(1));
+     } else if (location.hash) {
+       console.error("I don't want to fetch a file that doesn't match the regex.")
+     } else {
+       let latestArticle = document.querySelector("nav > a");
+       fetchArticle(latestArticle.dataset.url);
+     }
+   });
   // set up worker
   worker = new Worker('js/worker.js');
   worker.onmessage = function(event) {
