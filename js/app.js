@@ -37,7 +37,7 @@ function requestArticle(ev) {
 function fetchArticle(url) {
   fetch('articles/'+url).then(resp => {
     return resp.text().then(text => {
-      let article = document.getElementById("mainarticle");
+      let article = document.getElementById("article");
       let markup = marked(text);
       article.innerHTML = markup;
       let state = {
@@ -56,12 +56,14 @@ function fetchArticle(url) {
 
 addEventListener('popstate', function(event) {
   let state = event.state;
-  let article = document.getElementById("mainarticle");
-  article.innerHTML = state.articleText;
-  if (state.highlighted !== true) {
-    let codeEls = article.querySelectorAll("code");
-    for (var el of codeEls) {
-      highlightElement(el);
+  if (state) {
+    let article = document.getElementById("mainarticle");
+    article.innerHTML = state.articleText;
+    if (state.highlighted !== true) {
+      let codeEls = article.querySelectorAll("code");
+      for (var el of codeEls) {
+        highlightElement(el);
+      }
     }
   }
 });

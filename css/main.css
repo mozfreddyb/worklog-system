@@ -1,25 +1,35 @@
 #indexframe { display: none; }
 html {
   font-family: Fira Sans, sans, sans-serif;
-
 }
 code {
   font-family: "Fira Mono";
-  white-space: pre;
+  white-space: pre-wrap;
 }
-pre { background-color: #eee; }
+a { color: black; }
+a:visited { color: #333; }
+
+pre { background-color: #eee;  max-width: 100%; }
+hr { padding: 0px; background-color: black; }
 nav {
  display: flex;
  flex-direction: column; /* flex downwards */
  justify-content: flex-start; /* collect links at the top */
  flex-shrink: 1; /* dont grow, dont shrink */
  flex-grow: 1; /* "dont grow, dont shrink */
- border-left : 1px solid #D7DBDD;
- height: 300px;
- width: 150px;
-
+ border-right : 1px solid #D7DBDD;
 }
 article {
+  flex-grow: 11;
 }
-#flexcontainer { display: flex; }
-hr { padding: 0px; background-color: black; }
+#main {
+  display: flex;
+  flex-flow: row;
+}
+@media screen and (max-width: 768px) {
+  #main {
+    flex-direction: column;
+  }
+  h1 { font-size: 5vw; }
+  h2,h3 { font-size: 4vw; }
+}
