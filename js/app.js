@@ -8,8 +8,8 @@ function highlightElement(el) {
 function listArticles() {
   let iframe = document.getElementById("indexframe");
   let links = iframe.contentDocument.querySelectorAll("a");
-  links = Array.filter(links, (el) => el.href.endsWith(".md"));
-  let urls = Array.map(links, (el) => el.href);
+  links = Array.from(links).filter((el) => el.href.endsWith(".md"));
+  let urls = Array.from(links).map((el) => el.href);
   nav = document.getElementById("nav");
   // revese order, newest first.
   for (var i=urls.length-1; i > -1; i--) {
@@ -57,7 +57,7 @@ function fetchArticle(url) {
 addEventListener('popstate', function(event) {
   let state = event.state;
   if (state) {
-    let article = document.getElementById("mainarticle");
+    let article = document.getElementById("article");
     article.innerHTML = state.articleText;
     if (state.highlighted !== true) {
       let codeEls = article.querySelectorAll("code");
